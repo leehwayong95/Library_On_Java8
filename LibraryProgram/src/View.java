@@ -417,7 +417,7 @@ public class View{
 				String pw = memberList.getString("password");
 				int book = memberList.getInt("count");
 				
-				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+pw+"\t| "+book+"\t|");
+				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+pw+"\t| "+book+"권\t|");
 			}
 			this.consolePrint(1, "=========================================================================");
 			this.consolePrint(1, "");
@@ -432,13 +432,86 @@ public class View{
 
 	public void bookList(ResultSet bookList)
 	{
+		int num=0;
 		this.consoleClear();
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1,"*\t\t도서관 책 전체 정보\t\t*");
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "=========================================================================");
+		this.consolePrint(1, "| INDEX\t| 책 ID\t\t| 책 이름\t\t|  작가 \t\t| 수량 \t|");
+		try
+		{
+			while(bookList.next())
+			{
+				num = bookList.getInt("num");
+				int id = bookList.getInt("bookid");
+				String name = bookList.getString("bookname");
+				String writer = bookList.getString("writer");
+				int count = bookList.getInt("count");
+				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+writer+"\t| "+count+"\t|");
+			}
+			this.consolePrint(1, "=========================================================================");
+			this.consolePrint(1, "");
+			this.consolePrint(1, "총 "+num+"권의 책이 있습니다.");
+			this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public String searchMember() //멤버 검색 키워드 전달
+	{
+		this.consoleClear();
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t회원 \t검색\t\t*");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "회원의 ID를 검색합니다. ID를 입력해주세요.");
+		
+		return this.inputKeyboard("검색어 입력 : ");
+	}
+	
+	public String wrongMember()
+	{
+		this.consolePrint(1, "검색된 회원이 없습니다. 다시 입력 해주세요.");
+		return this.inputKeyboard("검색어 입력 : ");
+	}
+	
+	public boolean showSearchingmember(ResultSet memberList)
+	{
+		this.consolePrint(1, "=========================================================================");
 		this.consolePrint(1, "| INDEX\t| ID\t\t| 이름\t| PW\t| 대출현황\t|");
+		
+		try
+		{
+			int num = 0;
+			while(memberList.next())
+			{
+				num = memberList.getInt("num");
+				String id = memberList.getString("memberid");
+				String name = memberList.getString("membername");
+				String pw = memberList.getString("password");
+				int book = memberList.getInt("count");
+				
+				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+pw+"\t| "+book+"권\t|");
+			}
+			this.consolePrint(1, "=========================================================================");
+			this.consolePrint(1, "");
+			this.consolePrint(1, "총 "+num+"명의 회원이 있습니다.");
+			this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
+			return true;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	//편의기능

@@ -1,3 +1,5 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class admin {
 	View view = new View();
@@ -15,8 +17,31 @@ public class admin {
 				view.memberList(con.memberList());
 				break;
 			case 2:
+				view.bookList(con.bookList());
 				break;
 			case 3:
+				ResultSet rs;
+				boolean memberSearchflag = false;
+				String keyWord = view.searchMember();
+				while(!memberSearchflag)
+				{
+					try
+					{
+						rs = con.memberList(keyWord);
+						rs.last();
+						if(rs.getRow() > 0)
+						{
+							rs.beforeFirst();
+							memberSearchflag = view.showSearchingmember(rs);
+						}
+						else
+							keyWord = view.wrongMember();
+					}
+					catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
 				break;
 			case 4:
 				break;
@@ -27,6 +52,7 @@ public class admin {
 			case 7:
 				break;
 			case 8:
+				flag = true;
 				con.close();
 				view.consoleClear();
 				break;

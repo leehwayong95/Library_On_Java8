@@ -221,7 +221,7 @@ public class dbConnector
 		return this.SelectQuery(Query);
 	}
 	
-	public ResultSet memberList()
+	public ResultSet memberList()// 멤버리스트와 대출현황 count의 left outer join
 	{
 		try
 		{
@@ -240,6 +240,43 @@ public class dbConnector
 			return null;
 		}
 	}
+	
+	public ResultSet memberList(String id)//아이디로 검색시 where절 추가 OverLoad
+	{
+		try
+		{
+			stmt.execute("SET @rownum = 0;");
+			String Query = "SELECT @rownum := @rownum + 1 AS num, m.*,rent.count "
+					+ "FROM member AS m "
+					+ "LEFT OUTER JOIN (SELECT r.memberid, COUNT(*)AS count "
+						+ "FROM renthistory AS r "
+						+ "WHERE state = '대출' GROUP BY r.memberid)AS rent "
+					+ "ON rent.memberid = m.memberid "
+					+ "WHERE m.memberid LIKE \"%"+id+"%\";";
+			return this.SelectQuery(Query);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public ResultSet bookList()
+	{
+		try
+		{
+			stmt.execute("SET @rownum=0");
+			String Query = "SELECT @rownum := @rownum+1 AS num, b.* FROM book b;";
+			return this.SelectQuery(Query);
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	//편의기능
 	public boolean close()//연결 종료 메서드
 	{
