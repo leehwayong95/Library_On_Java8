@@ -111,13 +111,30 @@ public class admin {
 					}
 				}
 				break;
-			case 5:
+			case 5://신규 책 등록
+				int bookid;
+				boolean flag = false;
+				bookid = view.confirmBookid();
+				while(!flag)
+				{
+					if(con.confirmBookid(bookid))
+					{
+						if(con.registBook(view.registBook(bookid)))
+							flag = view.successInsertbook();
+						else
+							flag = view.failInsertbook();
+					}
+					else
+					{
+						bookid = view.wrongBookid();
+					}
+				}	
 				break;
-			case 6:
+			case 6://책 삭제
 				break;
-			case 7:
+			case 7://책 대여 반납
 				break;
-			case 8:
+			case 8://종료
 				flag = true;
 				con.close();
 				view.consoleClear();

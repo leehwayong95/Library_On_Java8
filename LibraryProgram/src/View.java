@@ -230,13 +230,13 @@ public class View{
 	public boolean successRent()//대출 후 메뉴 선택 반환
 	{
 		this.consolePrint(1, "대출 완료. 다른 책도 빌릴예정이십니까?");
-		return this.inputYorN();
+		return !this.inputYorN();
 	}
 	
 	public boolean failRent()//대출 실패 후 메뉴 선택 반환
 	{
 		this.consolePrint(1,"수량이 없습니다. 다시한번 검색하시겠습니까?");
-		return this.inputYorN();
+		return !this.inputYorN();
 	}
 	
 	public int showRentedbook(String userid,ResultSet rs) //대출 목록 표출
@@ -280,13 +280,13 @@ public class View{
 	public boolean continueReturn()//반납 완료
 	{
 		this.consolePrint(1, "반납완료. 추가로 반납하시겠습니까?");
-		return this.inputYorN();
+		return !this.inputYorN();
 	}
 	
 	public boolean FailReturn()//반납 실패
 	{
 		this.consolePrint(1, "반납에 실패하였습니다. 다시 시도하시겠습니까?");
-		return this.inputYorN();
+		return !this.inputYorN();
 	}
 	
 	public boolean nullList()//대출책 없을 때 
@@ -505,16 +505,95 @@ public class View{
 	
 	public void failDelete()
 	{
-		this.consolePrint(1,  "삭제 실패하였습니다.");
+		this.consolePrint(1, "삭제 실패하였습니다.");
 		this.consolePrint(1, "엔터를 누르면 메뉴로 돌아갑니다.");
 		this.inputKeyboard("");
 	}
 	
+	public int confirmBookid()
+	{
+		this.consoleClear();
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t도서 \t등록\t\t*");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		this.consolePrint(1, "");
+		boolean flag = false;
+		int id = 0;
+		while(!flag)
+		{
+			try
+			{
+				id = Integer.parseInt(this.inputKeyboard("등록하실 Book ID 입력(숫자) : "));
+				break;
+			}
+			catch(Exception e)
+			{
+				//e.printStackTrace();
+				this.consolePrint(1, "잘못 입력하셨습니다. 숫자로만 입력해주세요");
+			} 
+		}
+		return id;
+	}
+	
+	public int wrongBookid()
+	{
+		this.consolePrint(1, "중복된 book id입니다. 다시입력해주세요");
+		boolean flag = false;
+		int id = 0;
+		while(!flag)
+		{
+			try
+			{
+				id = Integer.parseInt(this.inputKeyboard("등록하실 Book ID 입력(숫자) : "));
+				break;
+			}
+			catch(Exception e)
+			{
+				//e.printStackTrace();
+				this.consolePrint(1, "잘못 입력하셨습니다. 숫자로만 입력해주세요");
+			} 
+		}
+		return id;
+	}
+
+	public book registBook(int id)
+	{
+		book registbook = new book();
+		registbook.bookid = id;
+		registbook.name = this.inputKeyboard("등록할 책 제목 입력 : ");
+		registbook.writer = this.inputKeyboard("등록할 책 저자 입력 : ");
+		boolean flag = false;
+		while(!flag)
+		{
+			try
+			{
+				registbook.count = Integer.parseInt(this.inputKeyboard("등록할 책 개수 입력 : "));
+				flag = true;
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+				this.consolePrint(1, "개수를 잘못 입력하셨습니다 다시 입력해주세요");
+			}
+		}
+		return registbook;
+	}
+	
 	public boolean successInsertbook()
 	{
-		this.consolePrint(1, "정보를 등록하는데 성공하였습니다");
-		this.consolePrint(1, "");
-		return true;
+		this.consolePrint(1, "정보를 등록하는데 성공하였습니다.");
+		this.consolePrint(1, "다른 책을 등록 하시겠습니까?");
+		return !this.inputYorN();
+	}
+	
+	public boolean failInsertbook()
+	{
+		this.consolePrint(1, "정보를 등록하는데 실패하였습니다.");
+		this.consolePrint(1, "다시 한번 시도하시겠습니까?");
+		return !this.inputYorN();
 	}
 	
 	//편의기능
@@ -547,12 +626,23 @@ public class View{
 		String input;
 		System.out.print(message);
 		input = scan.nextLine();
-		if(0<Integer.parseInt(input) && Integer.parseInt(input) <= range)
-			return Integer.parseInt(input);
-		else
+		while(true)
 		{
-			System.out.println("메뉴의 번호를 올바르게 선택해주세요.");
-			return inputKeyboard(range, message);
+			try
+			{
+				if(0<Integer.parseInt(input) && Integer.parseInt(input) <= range)
+					return Integer.parseInt(input);
+				else
+				{
+					System.out.println("메뉴의 번호를 올바르게 선택해주세요.");
+					return inputKeyboard(range, message);
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println("메뉴의 번호를 올바르게 선택해주세요.");
+				return inputKeyboard(range, message);
+			}
 		}
 	}
 	
@@ -565,7 +655,7 @@ public class View{
 		return input;
 	}
 	
-	public boolean inputYorN()
+	public boolean inputYorN()//Y/N을 입력하는 메서드
 	{
 		while(true)
 		{
@@ -579,7 +669,7 @@ public class View{
 		}
 	}
 	
-	public int showMember(ResultSet memberList) throws SQLException //유저 멤버 표출
+	public int showMember(ResultSet memberList) throws SQLException //유저 멤버 표출 메서드
 	{
 		this.consolePrint(1, "=========================================================================");
 		this.consolePrint(1, "| INDEX\t| ID\t\t| 이름\t| PW\t| 대출현황\t|");

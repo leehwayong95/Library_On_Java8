@@ -284,6 +284,30 @@ public class dbConnector
 		}
 	}
 	
+	public boolean confirmBookid(int id)
+	{
+		try
+		{
+			String Query = "SELECT * FROM BOOK WHERE bookid =" + id+";";
+			ResultSet rs = this.SelectQuery(Query);
+			if(rs.next())
+				return false;
+			else
+				return true;
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean registBook(book b)
+	{
+		String Query = "INSERT INTO book VALUES ("+b.bookid+",\""+b.name+"\",\""+b.writer+"\","+b.count+");";
+		return this.Query(Query);
+	}
+	
 	//편의기능
 	public boolean close()//연결 종료 메서드
 	{
