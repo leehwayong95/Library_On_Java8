@@ -13,13 +13,13 @@ public class admin {
 			int SelectMenu = view.adminMenu();
 			switch(SelectMenu)
 			{
-			case 1:
+			case 1://회원 리스트
 				view.memberList(con.memberList());
 				break;
-			case 2:
+			case 2://책 리스트
 				view.bookList(con.bookList());
 				break;
-			case 3:
+			case 3://회원 검색
 				ResultSet rs;
 				boolean memberSearchflag = false;
 				String keyWord = view.searchMember();
@@ -27,7 +27,10 @@ public class admin {
 				{
 					try
 					{
-						rs = con.memberList(keyWord);
+						if (keyWord.equals(""))
+							rs = con.memberList();
+						else
+							rs = con.memberList(keyWord);
 						rs.last();
 						if(rs.getRow() > 0)
 						{
@@ -43,7 +46,70 @@ public class admin {
 					}
 				}
 				break;
-			case 4:
+			case 4://회원 삭제
+				ResultSet deletemember;
+				boolean memberdeleteflag = false;
+				String deletekeyWord = view.searchMember();
+				
+				while(!memberdeleteflag)
+				{
+					if(deletekeyWord.equals(""))
+						deletemember = con.memberList();
+					else
+						deletemember = con.memberList(deletekeyWord);
+					try
+					{
+						deletemember.last();
+						int row = deletemember.getRow();
+						if(row == 0)
+						{
+							//잘못된 검색어
+							deletekeyWord = view.wrongMember();
+							memberdeleteflag = false;
+						}
+						else if(row == 1)
+						{
+							//1명일 때
+							deletemember.beforeFirst();
+							if(view.deleteMember(deletemember))
+							{
+								deletemember.first();
+								if(con.deleteMember(deletemember.getString("memberid")))
+									view.successDelete();
+								else
+									view.failDelete();
+							}
+							else
+								view.failDelete();
+							memberdeleteflag = true;
+						}
+						else
+						{
+							//여러명일 때
+							deletemember.beforeFirst();
+							int deletememberSelect = view.deleteMember(deletemember, row);
+							deletemember.beforeFirst();
+							for(int i = 0 ; i < deletememberSelect ; i++)
+							{
+								deletemember.next();
+							}
+							if(view.confirmDelete(deletemember.getString("memberid")))
+							{
+								if(con.deleteMember(deletemember.getString("memberid")))
+									view.successDelete();
+								else
+									view.failDelete();
+							}
+							else
+								view.failDelete();
+							memberdeleteflag = true;
+						}
+					}
+					catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
 				break;
 			case 5:
 				break;

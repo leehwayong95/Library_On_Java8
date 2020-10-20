@@ -137,6 +137,7 @@ public class dbConnector
 				rs = this.SelectQuery("SELECT bookid,count FROM (SELECT @rownum := @rownum+1 AS num, b.* FROM book b)AS search WHERE num = " + index +";");
 			else
 				rs = this.SelectQuery("SELECT bookid,count FROM (SELECT @rownum:= @rownum+1 AS num, b.* FROM book b WHERE bookname LIKE \"%"+keyWord+"%\") AS search WHERE num = " + index +";");
+				//이전 찾은 rs pointer를 옮겨서 파라메터로 받을까....
 			if(rs.next())
 				if(rs.getInt("count")<=0)
 					return false; //수량없음
@@ -262,6 +263,12 @@ public class dbConnector
 		}
 	}
 	
+	public boolean deleteMember(String ID)//멤버 삭제 명령
+	{
+			String Query = "DELETE FROM member WHERE memberid = \""+ID+"\";";
+			return this.Query(Query);	
+	}
+	
 	public ResultSet bookList()
 	{
 		try
@@ -283,6 +290,7 @@ public class dbConnector
 		try
 		{
 			con.close();
+			stmt.close();
 			return true;
 		}
 		catch (SQLException e)
