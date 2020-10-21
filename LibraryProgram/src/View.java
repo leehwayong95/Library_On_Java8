@@ -194,7 +194,7 @@ public class View{
 		return keyWord;
 	}
 	
-	public int resultBook(ResultSet rs)//검색 결과 표출 및 선택 row 반환
+	public int resultBook(ResultSet rs, String message)//검색 결과 표출 및 선택 row 반환
 	{
 		int number = 0;
 		this.consolePrint(1, "=========================================================================");
@@ -215,8 +215,8 @@ public class View{
 			this.consolePrint(1, "");
 			this.consolePrint(1, "");
 			this.consolePrint(1, "");
-			this.consolePrint(1, "총 "+number+"권 검색되었습니다.");//그냥 rs에서 마지막 num 가져올까...
-			this.consolePrint(1, "대여를 원하시는 책을 선택해주세요.");
+			this.consolePrint(1, "총 "+number+"권 검색되었습니다.");
+			this.consolePrint(1, message+"를 원하시는 책을 선택해주세요.");
 			return this.inputKeyboard(number, "책 번호 입력 : ");
 
 		}
@@ -384,17 +384,21 @@ public class View{
 		this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
 		
 	}
-
-	public void bookList(ResultSet bookList)
+	
+	public void showBookListmenu()
 	{
-		int num = 0;
 		this.consoleClear();
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1,"*\t\t도서관 책 전체 정보\t\t*");
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
+	}
+
+	public void bookList(ResultSet bookList)
+	{
+		int num = 0;
 		this.consolePrint(1, "=========================================================================");
-		this.consolePrint(1, "| INDEX\t| 책 ID\t\t| 책 이름\t\t|  작가 \t\t| 수량 \t|");
+		this.consolePrint(1, "| INDEX\t| 책 ID\t\t| 책 이름\t\t|  작가 \t\t| 수량 \t| 대여중인 건수 \t|");
 		try
 		{
 			while(bookList.next())
@@ -404,12 +408,15 @@ public class View{
 				String name = bookList.getString("bookname");
 				String writer = bookList.getString("writer");
 				int count = bookList.getInt("count");
-				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+writer+"\t| "+count+"\t|");
+				int rented = bookList.getInt("rented");
+				//if(rented == )
+					
+					
+				this.consolePrint(1, "| "+num +"\t| "+id+"\t\t| "+name+"\t| "+writer+"\t| "+count+"\t| "+rented+"\t|");
 			}
 			this.consolePrint(1, "=========================================================================");
 			this.consolePrint(1, "");
 			this.consolePrint(1, "총 "+num+"권의 책이 있습니다.");
-			this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
 		}
 		catch(SQLException e)
 		{
@@ -496,21 +503,21 @@ public class View{
 		return this.inputYorN();
 	}
 	
-	public void successDelete()
+	public boolean successDelete() // 회원 삭제 성공
 	{
 		this.consolePrint(1, "삭제되었습니다.");
-		this.consolePrint(1, "엔터를 누르면 메뉴로 돌아갑니다.");
-		this.inputKeyboard("");
+		this.consolePrint(1, "더 회원을 삭제하시겠습니까?");
+		return !this.inputYorN();
 	}
 	
-	public void failDelete()
+	public boolean failDelete(String reason) // 회원 삭제 실패 메서드
 	{
-		this.consolePrint(1, "삭제 실패하였습니다.");
-		this.consolePrint(1, "엔터를 누르면 메뉴로 돌아갑니다.");
-		this.inputKeyboard("");
+		this.consolePrint(1, reason+"로 삭제에 실패 하였습니다.");
+		this.consolePrint(1, "다시 시도 하시겠습니까?");
+		return !this.inputYorN();
 	}
 	
-	public int confirmBookid()
+	public int confirmBookid() //book id input
 	{
 		this.consoleClear();
 		this.consolePrint(1,"*****************************************");
@@ -520,80 +527,46 @@ public class View{
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
-		boolean flag = false;
-		int id = 0;
-		while(!flag)
-		{
-			try
-			{
-				id = Integer.parseInt(this.inputKeyboard("등록하실 Book ID 입력(숫자) : "));
-				break;
-			}
-			catch(Exception e)
-			{
-				//e.printStackTrace();
-				this.consolePrint(1, "잘못 입력하셨습니다. 숫자로만 입력해주세요");
-			} 
-		}
+		int id = this.inputKeyboard(9999, "등록하실 Book ID 입력(1~9999) : ");
 		return id;
 	}
 	
-	public int wrongBookid()
+	public int wrongBookid() //book id 중복
 	{
 		this.consolePrint(1, "중복된 book id입니다. 다시입력해주세요");
-		boolean flag = false;
-		int id = 0;
-		while(!flag)
-		{
-			try
-			{
-				id = Integer.parseInt(this.inputKeyboard("등록하실 Book ID 입력(숫자) : "));
-				break;
-			}
-			catch(Exception e)
-			{
-				//e.printStackTrace();
-				this.consolePrint(1, "잘못 입력하셨습니다. 숫자로만 입력해주세요");
-			} 
-		}
+		int id = this.inputKeyboard(9999, "ID (1~9999 : ");
 		return id;
 	}
 
-	public book registBook(int id)
+	public book registBook(int id) //정보 받는 부분
 	{
 		book registbook = new book();
 		registbook.bookid = id;
 		registbook.name = this.inputKeyboard("등록할 책 제목 입력 : ");
 		registbook.writer = this.inputKeyboard("등록할 책 저자 입력 : ");
-		boolean flag = false;
-		while(!flag)
-		{
-			try
-			{
-				registbook.count = Integer.parseInt(this.inputKeyboard("등록할 책 개수 입력 : "));
-				flag = true;
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-				this.consolePrint(1, "개수를 잘못 입력하셨습니다 다시 입력해주세요");
-			}
-		}
+		registbook.count = this.inputKeyboard(999, "등록할 책 개수 입력 (1~999) : ");
 		return registbook;
 	}
 	
-	public boolean successInsertbook()
+	public boolean successInsertbook() //책 정보 Insert 성공
 	{
 		this.consolePrint(1, "정보를 등록하는데 성공하였습니다.");
 		this.consolePrint(1, "다른 책을 등록 하시겠습니까?");
 		return !this.inputYorN();
 	}
 	
-	public boolean failInsertbook()
+	public boolean failInsertbook() //책 정보 Insert Fail
 	{
 		this.consolePrint(1, "정보를 등록하는데 실패하였습니다.");
 		this.consolePrint(1, "다시 한번 시도하시겠습니까?");
 		return !this.inputYorN();
+	}
+	
+	public boolean confirmDeletebook(int index,String bookname)
+	{
+		this.consolePrint(1, "선택된 책은 " + index + "번째의\"" + bookname +"\"입니다.");
+		this.consolePrint(1,"삭제를 진행하시겠습니까?");
+		return this.inputYorN();
 	}
 	
 	//편의기능
@@ -634,13 +607,13 @@ public class View{
 					return Integer.parseInt(input);
 				else
 				{
-					System.out.println("메뉴의 번호를 올바르게 선택해주세요.");
+					System.out.println("번호를 올바르게 입력해주세요.");
 					return inputKeyboard(range, message);
 				}
 			}
 			catch(Exception e)
 			{
-				System.out.println("메뉴의 번호를 올바르게 선택해주세요.");
+				System.out.println("번호를 올바르게 입력해주세요.");
 				return inputKeyboard(range, message);
 			}
 		}

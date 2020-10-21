@@ -18,9 +18,9 @@ public class usr {
 				String keyWord;
 				ResultSet result;
 				boolean searchflag = false;
+				keyWord = view.searchBook();
 				while(!searchflag)
 				{
-					keyWord = view.searchBook();
 					if(keyWord.equals(""))
 						result = con.searchBook();//책 전체 검색 overload
 					else
@@ -31,7 +31,7 @@ public class usr {
 						if(result.getRow() > 0)
 						{
 							result.beforeFirst();//row 계산을 위한 포인터를 처음과 같이 옮김
-							if(con.rentBook(view.resultBook(result),keyWord,ID))
+							if(con.rentBook(view.resultBook(result,"대여"),keyWord,ID))
 							{
 								if(view.successRent())
 									searchflag = true;

@@ -17,7 +17,9 @@ public class admin {
 				view.memberList(con.memberList());
 				break;
 			case 2://책 리스트
-				view.bookList(con.bookList());
+				view.showBookListmenu();
+				view.bookList(con.searchBook());
+				view.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
 				break;
 			case 3://회원 검색
 				ResultSet rs;
@@ -74,14 +76,10 @@ public class admin {
 							if(view.deleteMember(deletemember))
 							{
 								deletemember.first();
-								if(con.deleteMember(deletemember.getString("memberid")))
-									view.successDelete();
-								else
-									view.failDelete();
+								memberdeleteflag = this.cheackrentedBook(deletemember);
 							}
 							else
-								view.failDelete();
-							memberdeleteflag = true;
+								memberdeleteflag = view.failDelete("사용자 취소");
 						}
 						else
 						{
@@ -95,14 +93,10 @@ public class admin {
 							}
 							if(view.confirmDelete(deletemember.getString("memberid")))
 							{
-								if(con.deleteMember(deletemember.getString("memberid")))
-									view.successDelete();
-								else
-									view.failDelete();
+								memberdeleteflag = this.cheackrentedBook(deletemember);
 							}
 							else
-								view.failDelete();
-							memberdeleteflag = true;
+								view.failDelete("사용자 취소");
 						}
 					}
 					catch (SQLException e)
@@ -113,16 +107,16 @@ public class admin {
 				break;
 			case 5://신규 책 등록
 				int bookid;
-				boolean flag = false;
+				boolean registflag = false;
 				bookid = view.confirmBookid();
-				while(!flag)
+				while(!registflag)
 				{
 					if(con.confirmBookid(bookid))
 					{
 						if(con.registBook(view.registBook(bookid)))
-							flag = view.successInsertbook();
+							registflag = view.successInsertbook();
 						else
-							flag = view.failInsertbook();
+							registflag = view.failInsertbook();
 					}
 					else
 					{
@@ -131,17 +125,73 @@ public class admin {
 				}	
 				break;
 			case 6://책 삭제
+				boolean booksearchflag = false;
+				ResultSet booksearch;
+				String bookSearchkeyword = view.searchBook();
+				while(!booksearchflag)
+				{
+					if(bookSearchkeyword.equals(""))
+						booksearch = con.searchBook();
+					else
+						booksearch = con.searchBook(bookSearchkeyword);
+					try
+					{
+						booksearch.last();
+						if(booksearch.getRow() > 0)
+						{
+							booksearch.beforeFirst();
+							int deleteBookselect = view.resultBook(booksearch, "삭제");
+							booksearch.beforeFirst();
+							for(int i = 0 ; i < deleteBookselect ; i++)
+								booksearch.next();
+							if(booksearch.getInt("rented") > 0)
+								booksearchflag = view.failDelete("책을 빌린사람이 있으므");
+							else
+							{
+								if(view.confirmDeletebook(deleteBookselect,booksearch.getString("bookname")))
+								{
+									if(con.deleteBook(booksearch.getInt("bookid")))
+										booksearchflag = view.successDelete();
+									else
+										booksearchflag = view.failDelete("SQL오류");
+								}
+								else
+									booksearchflag = view.failDelete("사용자 취소");							}
+						}
+						else
+							bookSearchkeyword = view.wrongsearchBook();
+					}
+					catch (SQLException e)
+					{
+						e.printStackTrace();
+					}
+				}
 				break;
 			case 7://책 대여 반납
 				break;
 			case 8://종료
 				flag = true;
+				System.out.println(flag);
 				con.close();
-				view.consoleClear();
 				break;
 			default:
 				view.consolePrint(1, "메뉴를 잘못선택하셨습니다. 다시선택해주세요.");
 			}
 		}
+	}
+	
+	boolean cheackrentedBook(ResultSet deletemember) throws SQLException
+	{
+		if(deletemember.getInt("count") == 0)
+		{
+			if(deletemember.getString("memberid").equals("admin"))
+				return view.failDelete("관리자 계정 삭제시도");
+			else if(con.deleteMember(deletemember.getString("memberid")))
+				return view.successDelete();
+			else
+				return view.failDelete("DB오류");
+		}
+		else
+			return view.failDelete("대출 기록 존재");
 	}
 }

@@ -44,7 +44,7 @@ public class dbConnector
 			else
 				return true;
 		} catch (SQLException e) {
-			e.printStackTrace();//Debug
+			//e.printStackTrace();//Debug
 			return false;
 		}
 	}
@@ -102,7 +102,16 @@ public class dbConnector
 		try
 		{
 			stmt.execute("SET @rownum=0;");
-			ResultSet rs = this.SelectQuery("SELECT @rownum:=@rownum+1 AS num,b.* FROM book b WHERE bookname LIKE \"%" + keyword + "%\";");
+			String Query = "SELECT @rownum := @rownum + 1 AS num, b.*,rent.rented " + 
+					"FROM book AS b " + 
+					"LEFT OUTER JOIN " + 
+						"(SELECT r.bookid, COUNT(*)AS rented FROM renthistory AS r " + 
+						"WHERE state = '대출' " + 
+						"GROUP BY r.bookid)AS rent " + 
+					"ON rent.bookid = b.bookid " +
+					"WHERE bookname LIKE \"%"+keyword+"%\"";
+			ResultSet rs = this.SelectQuery(Query);
+			//this.SelectQuery("SELECT @rownum:=@rownum+1 AS num,b.* FROM book b WHERE bookname LIKE \"%" + keyword + "%\";");
 			return rs;
 		}
 		catch (SQLException e)
@@ -116,7 +125,15 @@ public class dbConnector
 		try
 		{
 			stmt.execute("SET @rownum=0;");
-			ResultSet rs = this.SelectQuery("SELECT @rownum:=@rownum+1 AS num,b.* FROM book b;");
+			String Query = "SELECT @rownum := @rownum + 1 AS num, b.*,rent.rented " + 
+					"FROM book AS b " + 
+					"LEFT OUTER JOIN " + 
+						"(SELECT r.bookid, COUNT(*)AS rented FROM renthistory AS r " + 
+						"WHERE state = '대출' " + 
+						"GROUP BY r.bookid)AS rent " + 
+					"ON rent.bookid = b.bookid ";
+			ResultSet rs = this.SelectQuery(Query);
+			//ResultSet rs = this.SelectQuery("SELECT @rownum:=@rownum+1 AS num,b.* FROM book b;");
 			return rs;
 		}
 		catch (SQLException e)
@@ -144,7 +161,7 @@ public class dbConnector
 
 			selectBookid = rs.getInt("bookid");//해당 책 id 찾아오기
 			String rentQuery = "INSERT INTO renthistory(memberid,bookid,state) VALUES(\""+ID+"\","+selectBookid+",\"대출\");";
-			//수량 조건 검사 및 감소하는 쿼리 필요
+			//수량 조건 검사 및 감소하는 쿼리
 			if(Query(rentQuery))
 			{
 				Query("UPDATE book SET count = count - 1 WHERE bookid = "+selectBookid+";");
@@ -269,12 +286,18 @@ public class dbConnector
 			return this.Query(Query);	
 	}
 	
-	public ResultSet bookList()
+	public ResultSet bookList() //북 전체 리스트 표츌
 	{
 		try
 		{
 			stmt.execute("SET @rownum=0");
-			String Query = "SELECT @rownum := @rownum+1 AS num, b.* FROM book b;";
+			String Query = "SELECT @rownum := @rownum + 1 AS num, b.*,rent.rented " + 
+					"FROM book AS b " + 
+					"LEFT OUTER JOIN " + 
+						"(SELECT r.bookid, COUNT(*)AS rented FROM renthistory AS r " + 
+						"WHERE state = '대출' " + 
+						"GROUP BY r.bookid)AS rent " + 
+					"ON rent.bookid = b.bookid;";
 			return this.SelectQuery(Query);
 		}
 		catch(SQLException e)
@@ -305,6 +328,12 @@ public class dbConnector
 	public boolean registBook(book b)
 	{
 		String Query = "INSERT INTO book VALUES ("+b.bookid+",\""+b.name+"\",\""+b.writer+"\","+b.count+");";
+		return this.Query(Query);
+	}
+	
+	public boolean deleteBook(int bookid)
+	{
+		String Query = "DELETE FROM book WHERE bookid = "+bookid+";";
 		return this.Query(Query);
 	}
 	
