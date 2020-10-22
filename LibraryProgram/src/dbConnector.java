@@ -44,7 +44,7 @@ public class dbConnector
 			else
 				return true;
 		} catch (SQLException e) {
-			//e.printStackTrace();//Debug
+			////e.printStackTrace();//Debug
 			return false;
 		}
 	}
@@ -74,7 +74,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			//e.printStackTrace();DEBUG
+			////e.printStackTrace();DEBUG
 			return false;
 		}
 	}
@@ -92,7 +92,7 @@ public class dbConnector
 		}
 		catch(SQLException e)
 		{
-			//e.printStackTrace();DEBUG
+			////e.printStackTrace();DEBUG
 			return null;
 		}
 	}
@@ -138,7 +138,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			//e.printStackTrace();DEBUG
+			////e.printStackTrace();DEBUG
 			return null;
 		}
 	}
@@ -175,7 +175,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace(); //DEBUG
+			//e.printStackTrace(); //DEBUG
 			return false;
 		}
 	}
@@ -194,7 +194,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();//Debug
+			//e.printStackTrace();//Debug
 			return null;
 		}
 	}
@@ -207,9 +207,9 @@ public class dbConnector
 			int rentIndex = 0;
 			int bookid = 0;
 			stmt.execute("SET @rownum=0");
-			String Query = "SELECT re.index, re.bookid "
+			String Query = "SELECT r//e.index, r//e.bookid "
 					+"FROM(SELECT @rownum := @rownum + 1 AS num, r.index, r.bookid FROM renthistory AS r JOIN book AS b ON b.bookid = r.bookid WHERE r.state = \"¥Î√‚\" AND r.memberid = \""+userid+"\")AS re "
-					+"WHERE re.num = "+selectBook+";";
+					+"WHERE r//e.num = "+selectBook+";";
 			rs = this.SelectQuery(Query);
 			if(rs.next())
 				rentIndex = rs.getInt("index");
@@ -228,7 +228,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
@@ -254,7 +254,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -275,7 +275,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -302,7 +302,7 @@ public class dbConnector
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -320,7 +320,7 @@ public class dbConnector
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
@@ -370,7 +370,7 @@ public class dbConnector
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();//Debug
+			//e.printStackTrace();//Debug
 			return false;
 		}
 	}
@@ -385,7 +385,7 @@ public class dbConnector
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();//Debug
+			//e.printStackTrace();//Debug
 			return result;
 		}
 	}
