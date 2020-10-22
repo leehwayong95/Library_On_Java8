@@ -51,10 +51,11 @@ public class admin {
 			case 4://회원 삭제
 				ResultSet deletemember;
 				boolean memberdeleteflag = false;
-				String deletekeyWord = view.searchMember();
+				String deletekeyWord;
 				
 				while(!memberdeleteflag)
 				{
+					deletekeyWord = view.searchMember();
 					if(deletekeyWord.equals(""))
 						deletemember = con.memberList();
 					else
@@ -96,7 +97,7 @@ public class admin {
 								memberdeleteflag = this.cheackrentedBook(deletemember);
 							}
 							else
-								view.failDelete("사용자 취소");
+								memberdeleteflag = view.failDelete("사용자 취소");
 						}
 					}
 					catch (SQLException e)
@@ -127,9 +128,10 @@ public class admin {
 			case 6://책 삭제
 				boolean booksearchflag = false;
 				ResultSet booksearch;
-				String bookSearchkeyword = view.searchBook();
+				String bookSearchkeyword;
 				while(!booksearchflag)
 				{
+					bookSearchkeyword = view.searchBook();
 					if(bookSearchkeyword.equals(""))
 						booksearch = con.searchBook();
 					else
@@ -168,6 +170,7 @@ public class admin {
 				}
 				break;
 			case 7://책 대여 반납
+				view.showRenthistory(con.renthistory());
 				break;
 			case 8://종료
 				flag = true;

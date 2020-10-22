@@ -272,7 +272,7 @@ public class View{
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return -1;//인출 실패
 		}
 	}
@@ -338,7 +338,7 @@ public class View{
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
@@ -378,7 +378,7 @@ public class View{
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		this.consolePrint(1, "총 "+num+"명의 회원이 있습니다.");
 		this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
@@ -420,7 +420,7 @@ public class View{
 		}
 		catch(SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 	
@@ -457,7 +457,7 @@ public class View{
 		}
 		catch (SQLException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 	}
@@ -471,7 +471,7 @@ public class View{
 			memberList.first();
 			ID = memberList.getString("memberid");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 		this.consolePrint(1, "총 "+num+"명의 회원이 있습니다.");
@@ -487,7 +487,7 @@ public class View{
 		try {
 			num = this.showMember(memberList);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return 0;
 		}
 		this.consolePrint(1, "총 "+num+"명의 회원이 있습니다.");
@@ -534,7 +534,7 @@ public class View{
 	public int wrongBookid() //book id 중복
 	{
 		this.consolePrint(1, "중복된 book id입니다. 다시입력해주세요");
-		int id = this.inputKeyboard(9999, "ID (1~9999 : ");
+		int id = this.inputKeyboard(9999, "등록하실 Book ID 입력(1~9999) : ");
 		return id;
 	}
 
@@ -569,7 +569,45 @@ public class View{
 		return this.inputYorN();
 	}
 	
-	//편의기능
+	public void showRenthistory(ResultSet rs)
+	{
+		this.consoleClear();
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t대출 \t기록\t\t*");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"");
+		this.consolePrint(1,"");
+		this.consolePrint(1,"");
+		this.consolePrint(1,"");
+		this.consolePrint(1, "==============================================");
+		try
+		{
+			while(rs.next())
+			{
+				String memberid = rs.getString("memberid");
+				String membername = rs.getString("membername");
+				String bookid = rs.getString("bookid");
+				String bookname = rs.getString("bookname");
+				String rentDate = rs.getString("date");
+				String back = rs.getString("back");
+				if(rs.wasNull())
+					this.consolePrint(1, membername+"("+memberid +")가 "+rentDate+"에 \""+bookname+"\"("+bookid+")를 빌려감.");
+				else
+					this.consolePrint(1, membername+"("+memberid +")가 "+rentDate+"에 \""+bookname+"\"("+bookid+")를 빌렸고 " + back +"에 반납함.");
+			}
+			this.consolePrint(1, "==============================================");
+			this.consolePrint(1, "");
+			this.inputKeyboard("엔터를 누르면 메뉴로 돌아갑니다");
+		}
+		catch(SQLException e)
+		{
+			//e.printStackTrace();
+			this.consolePrint(1, "도서 대출 기록이 없습니다");
+			this.inputKeyboard("엔터를 누르시면 메뉴로 돌아갑니다");
+		}
+	}
+	
+	/**********편의기능***********/
 	public void consoleClear()
 	{
 		//콘솔 창 정리 Method

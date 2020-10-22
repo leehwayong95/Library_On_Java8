@@ -337,7 +337,16 @@ public class dbConnector
 		return this.Query(Query);
 	}
 	
-	//편의기능
+	public ResultSet renthistory()
+	{
+		//String Query = "SELECT * FROM renthistory";
+		String Query = "SELECT r.*,b.bookname,m.membername "
+				+ "FROM renthistory AS r, book AS b, member AS m "
+				+ "WHERE r.bookid = b.bookid AND r.memberid = m.memberid "
+				+ "ORDER BY r.index";
+		return this.SelectQuery(Query);
+	}
+	/*******************편의기능******************/
 	public boolean close()//연결 종료 메서드
 	{
 		try
