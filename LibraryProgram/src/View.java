@@ -12,9 +12,9 @@ public class View{
 	public int mainMenu()//메인메뉴 선택 표출
 	{
 		int input;
-		this.consolePrint(1,"***********************************");
-		this.consolePrint(1,"**********도서관리 ****프로그램**********");
-		this.consolePrint(1,"***********************************");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t도서 관리 프로그램\t\t*");
+		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
@@ -33,9 +33,9 @@ public class View{
 	public String signinID()//회원 로그인 표출
 	{
 		String inputID;
-		this.consolePrint(1,"***********************************");
-		this.consolePrint(1,"*******회원 로그인*****************");
-		this.consolePrint(1,"***********************************");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t회원 \t로그인\t\t*");
+		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
@@ -75,9 +75,9 @@ public class View{
 	public String signupID()//회원가입 ID 입력
 	{
 		String inputID;
-		this.consolePrint(1,"***********************************");
-		this.consolePrint(1,"*******회원 가입*****************");
-		this.consolePrint(1,"***********************************");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t회원 \t가입\t\t*");
+		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
@@ -123,9 +123,9 @@ public class View{
 	public String adminPW()//관리자 모드 PW 입력
 	{
 		String inputPW;
-		this.consolePrint(1,"***********************************");
-		this.consolePrint(1,"*******관리자 모드*****************");
-		this.consolePrint(1,"***********************************");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t관리자 \t모드\t\t*");
+		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
@@ -348,9 +348,9 @@ public class View{
 		int menuSelect;
 		
 		this.consoleClear();
-		this.consolePrint(1,"***********************************");
-		this.consolePrint(1,"*******안녕하세요 관리자님*****************");
-		this.consolePrint(1,"***********************************");
+		this.consolePrint(1,"*****************************************");
+		this.consolePrint(1,"*\t\t안녕하세요 \t관리자님\t\t*");
+		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
