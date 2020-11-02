@@ -44,7 +44,7 @@ public class dbConnector
 			else
 				return true;
 		} catch (SQLException e) {
-			////e.printStackTrace();//Debug
+			//e.printStackTrace();//Debug
 			return false;
 		}
 	}
@@ -63,11 +63,11 @@ public class dbConnector
 		try {
 			if(result.next())
 			{
-				//if((PW.equals(result.getString("password").toString())))
+				if((PW.equals(result.getString("password").toString())))
 				//굳이 비교연산을해야하나 고민..
 					return true;
-				//else
-					//return false;
+				else
+					return false;
 			}
 			else
 				return false;
@@ -207,9 +207,9 @@ public class dbConnector
 			int rentIndex = 0;
 			int bookid = 0;
 			stmt.execute("SET @rownum=0");
-			String Query = "SELECT r//e.index, r//e.bookid "
+			String Query = "SELECT re.index, re.bookid "
 					+"FROM(SELECT @rownum := @rownum + 1 AS num, r.index, r.bookid FROM renthistory AS r JOIN book AS b ON b.bookid = r.bookid WHERE r.state = \"대출\" AND r.memberid = \""+userid+"\")AS re "
-					+"WHERE r//e.num = "+selectBook+";";
+					+"WHERE re.num = "+selectBook+";";
 			rs = this.SelectQuery(Query);
 			if(rs.next())
 				rentIndex = rs.getInt("index");
@@ -346,6 +346,7 @@ public class dbConnector
 				+ "ORDER BY r.index";
 		return this.SelectQuery(Query);
 	}
+	
 	/*******************편의기능******************/
 	public boolean close()//연결 종료 메서드
 	{

@@ -12,6 +12,7 @@ public class View{
 	public int mainMenu()//메인메뉴 선택 표출
 	{
 		int input;
+		this.consoleClear();
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1,"*\t\t도서 관리 프로그램\t\t*");
 		this.consolePrint(1,"*****************************************");
@@ -80,10 +81,10 @@ public class View{
 		this.consolePrint(1,"*****************************************");
 		this.consolePrint(1, "");
 		this.consolePrint(1, "");
-		this.consolePrint(1, "");
-		this.consolePrint(1, "");
+		this.consolePrint(1, "아이디는 영문자, 숫자로 구성되며 3~16글자로 구성됩니다.");
+		this.consolePrint(1, "대소문자는 구분하지 않습니다.");
 		
-		inputID = this.inputKeyboard("희망 ID : ");
+		inputID = this.inputKeyboard("ID : ");
 		return inputID;
 	}
 	
@@ -92,14 +93,14 @@ public class View{
 		String inputID;
 		this.consolePrint(1, "중복된 아이디 입니다. 다른 아이디를 입력해주세요");
 		
-		inputID = this.inputKeyboard("희망 ID : ");
+		inputID = this.inputKeyboard("ID : ");
 		return inputID;
 	}
 	
 	public String signupPW()//회원가입 PW 입력
 	{
 		String inputPW;
-		inputPW = this.inputKeyboard("희망 PW : ");
+		inputPW = this.inputKeyboard("희망 PW (영문,숫자): ");
 		String confirmPW = this.inputKeyboard("PW 재확인 : ");
 		if(inputPW.equals(confirmPW))
 		{
@@ -112,13 +113,25 @@ public class View{
 		}
 	}
 	
+	public String wrongsignupPW()
+	{
+		this.consolePrint(1, "잘못 입력하셨습니다. 다시입력해주세요");
+		return signupPW();
+	}
+	
 	public String signupName()//회원가입 이름 입력
 	{
 		String inputName;
-		inputName = this.inputKeyboard("이름 입력 : ");
-		this.consoleClear();
+		inputName = this.inputKeyboard("한글 이름 입력 : ");
 		return inputName;
 	}
+	
+	public String wrongsignupName()
+	{
+		this.consolePrint(1, "잘못 입력하셨습니다. 다시입력해주세요");
+		return signupName();
+	}
+	
 	
 	public String adminPW()//관리자 모드 PW 입력
 	{

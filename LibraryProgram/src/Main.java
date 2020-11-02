@@ -1,3 +1,4 @@
+import java.util.regex.Pattern;
 
 public class Main {
 	public static void main(String argp[]) 
@@ -26,9 +27,33 @@ public class Main {
 			case 2:
 				//È¸¿ø°¡ÀÔ
 				String signupID = view.signupID();//Ã³À½ sign up id¹Þ±â
-				while(!con.CheckID(signupID))
-					signupID = view.wrongsignupID();//¾ÆÀÌµð°¡ Áßº¹µÇÁö ¾ÊÀ»¶§±îÁö ID °è¼Ó¹Þ±â
-				if(con.signup(signupID, view.signupPW(), view.signupName()))//DB Insert
+				String engnumfilter = "^[a-z|A-Z|0-9]{3,16}$";
+				boolean engnumflag = Pattern.matches(engnumfilter, signupID);//¿µ¾î ¼ýÀÚÀÔ·Â °Ë»ç
+				boolean overlapflag = con.CheckID(signupID);
+				while(!overlapflag || !engnumflag)
+				{
+					if(!engnumflag)
+						signupID = view.wrongID();//¾ÆÀÌµð°¡ Áßº¹µÇÁö ¾ÊÀ»¶§±îÁö ID °è¼Ó¹Þ±â
+					else
+						signupID = view.wrongsignupID();
+					overlapflag = con.CheckID(signupID);
+					engnumflag = Pattern.matches(engnumfilter, signupID);
+				}
+				String PW = view.signupPW();
+				engnumflag = Pattern.matches(engnumfilter, PW);
+				while(!engnumflag)
+				{
+					PW = view.wrongsignupPW();
+					engnumflag = Pattern.matches(engnumfilter, PW);
+				}
+				String Name = view.signupName();
+				boolean korflag = Pattern.matches("^[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{2,5}$", Name);
+				while(!korflag)
+				{
+					Name = view.wrongsignupName();
+					korflag = Pattern.matches("^[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{2,5}$", Name);
+				}
+				if(con.signup(signupID, PW, Name))//DB Insert
 					view.consolePrint(1, "°¡ÀÔ ¿Ï·á");
 				else {
 					view.consolePrint(1, "°¡ÀÔ ½ÇÆÐ");
