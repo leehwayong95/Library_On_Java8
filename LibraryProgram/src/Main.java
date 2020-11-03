@@ -27,8 +27,7 @@ public class Main {
 			case 2:
 				//È¸¿ø°¡ÀÔ
 				String signupID = view.signupID();//Ã³À½ sign up id¹Þ±â
-				String engnumfilter = "^[a-z|A-Z|0-9]{3,16}$";
-				boolean engnumflag = Pattern.matches(engnumfilter, signupID);//¿µ¾î ¼ýÀÚÀÔ·Â °Ë»ç
+				boolean engnumflag = confirmInput(3, signupID,3,16);//¿µ¾î, ¼ýÀÚ, 3-16±ÛÀÚ
 				boolean overlapflag = con.CheckID(signupID);
 				while(!overlapflag || !engnumflag)
 				{
@@ -37,21 +36,15 @@ public class Main {
 					else
 						signupID = view.wrongsignupID();
 					overlapflag = con.CheckID(signupID);
-					engnumflag = Pattern.matches(engnumfilter, signupID);
+					engnumflag = confirmInput(3, signupID,3,16);
 				}
 				String PW = view.signupPW();
-				engnumflag = Pattern.matches(engnumfilter, PW);
-				while(!engnumflag)
-				{
-					PW = view.wrongsignupPW();
-					engnumflag = Pattern.matches(engnumfilter, PW);
-				}
-				String Name = view.signupName();
-				boolean korflag = Pattern.matches("^[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{2,5}$", Name);
+				String Name = view.signupName();//2~5±ÛÀÚ,ÇÑ±Û
+				boolean korflag = confirmInput(4,Name,2,5);
 				while(!korflag)
 				{
 					Name = view.wrongsignupName();
-					korflag = Pattern.matches("^[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{2,5}$", Name);
+					korflag = confirmInput(4,Name,2,5);
 				}
 				if(con.signup(signupID, PW, Name))//DB Insert
 					view.consolePrint(1, "°¡ÀÔ ¿Ï·á");
@@ -76,4 +69,29 @@ public class Main {
 			}
 		}
 	}
+	static boolean confirmInput(int mode, String s, int min, int max) // ÀÔ·Â ¹®ÀÚ °Ë»ç ¸Þ¼­µå
+    // mode : Á¶°Ç °Ë»ç 4bit·Î °¢ºñÆ®¸¶´Ù ÇÑ±Û,¿µ¹®,¼ýÀÚ Çã¿ë¸ðµå
+    // Çã¿ëÇÏ´Â ºÎºÐÀ» 1·Î Ã¤¿ö³Ö´Â´Ù. ¸ðµÎÇã¿ë½Ã 0(°Ë»çÇÏÁö¾ÊÀ½)
+    // s°¡ °Ë»çÇÏ´Â ¹®ÀÚ¿­.
+    // min max´Â ¹®ÀÚ¿­ ±æÀÌÁ¦ÇÑ.(0,0ÀÔ·Â½Ã ¹«Á¦ÇÑ)
+    {
+		if(mode == 0)
+			return true;
+        String len;
+        String option = "^[";
+        if ((mode & 1) == 1)
+            option += "0-9";
+        if ((mode & 2) == 2)
+            option += "a-zA-Z";
+        if ((mode & 4) == 4)
+            option += "¤¡-¤¾¤¿-¤Ó°¡-ÆR";
+        option += "]";
+
+        if (min == 0 && max == 0)
+            len = "*$";
+        else
+            len = "{" + min + "," + max + "}$";
+
+        return Pattern.matches(option + len, s);
+    }
 }

@@ -138,7 +138,7 @@ public class dbConnector
 		}
 		catch (SQLException e)
 		{
-			////e.printStackTrace();DEBUG
+			////e.printStackTrace();//DEBUG
 			return null;
 		}
 	}

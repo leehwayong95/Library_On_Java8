@@ -100,7 +100,7 @@ public class View{
 	public String signupPW()//회원가입 PW 입력
 	{
 		String inputPW;
-		inputPW = this.inputKeyboard("희망 PW (영문,숫자): ");
+		inputPW = this.inputKeyboard("희망 PW : ");
 		String confirmPW = this.inputKeyboard("PW 재확인 : ");
 		if(inputPW.equals(confirmPW))
 		{
@@ -111,12 +111,6 @@ public class View{
 			this.consolePrint(1, "비밀번호가 틀립니다. 다시 입력 해주세요.");
 			return this.signupPW();
 		}
-	}
-	
-	public String wrongsignupPW()
-	{
-		this.consolePrint(1, "잘못 입력하셨습니다. 다시입력해주세요");
-		return signupPW();
 	}
 	
 	public String signupName()//회원가입 이름 입력
@@ -519,7 +513,7 @@ public class View{
 	public boolean successDelete() // 회원 삭제 성공
 	{
 		this.consolePrint(1, "삭제되었습니다.");
-		this.consolePrint(1, "더 회원을 삭제하시겠습니까?");
+		this.consolePrint(1, "더 삭제하시겠습니까?");
 		return !this.inputYorN();
 	}
 	
@@ -557,7 +551,7 @@ public class View{
 		registbook.bookid = id;
 		registbook.name = this.inputKeyboard("등록할 책 제목 입력 : ");
 		registbook.writer = this.inputKeyboard("등록할 책 저자 입력 : ");
-		registbook.count = this.inputKeyboard(999, "등록할 책 개수 입력 (1~999) : ");
+		registbook.count = this.inputKeyboard(100, "등록할 책 개수 입력 (1~100) : ");
 		return registbook;
 	}
 	
