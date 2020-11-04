@@ -39,6 +39,12 @@ public class Main {
 					engnumflag = confirmInput(3, signupID,3,16);
 				}
 				String PW = view.signupPW();
+				boolean pwflag = confirmInput(0,PW,2,0);
+				while(!pwflag)
+				{
+					PW = view.signupPW(1);
+					pwflag = confirmInput(0,PW,2,0);
+				}
 				String Name = view.signupName();//2~5±ÛÀÚ,ÇÑ±Û
 				boolean korflag = confirmInput(4,Name,2,5);
 				while(!korflag)
@@ -74,23 +80,22 @@ public class Main {
     // Çã¿ëÇÏ´Â ºÎºÐÀ» 1·Î Ã¤¿ö³Ö´Â´Ù. ¸ðµÎÇã¿ë½Ã 0(°Ë»çÇÏÁö¾ÊÀ½)
     // s°¡ °Ë»çÇÏ´Â ¹®ÀÚ¿­.
     // min max´Â ¹®ÀÚ¿­ ±æÀÌÁ¦ÇÑ.(0,0ÀÔ·Â½Ã ¹«Á¦ÇÑ)
+	// max °¡ 0ÀÌ¸é ¹«Á¦ÇÑ
     {
-		if(mode == 0)
-			return true;
         String len;
-        String option = "^[";
-        if ((mode & 1) == 1)
+        String option = (mode == 0) ? "." : "^[";
+        if ((mode & 1) == 1)// 001
             option += "0-9";
-        if ((mode & 2) == 2)
+        if ((mode & 2) == 2)// 010
             option += "a-zA-Z";
-        if ((mode & 4) == 4)
+        if ((mode & 4) == 4)// 100
             option += "¤¡-¤¾¤¿-¤Ó°¡-ÆR";
-        option += "]";
+        option += (mode == 0) ? "" : "]";
 
         if (min == 0 && max == 0)
             len = "*$";
         else
-            len = "{" + min + "," + max + "}$";
+            len = "{" + min + "," + ((max == 0)?"":max) + "}"+((mode == 0)?"":"$");
 
         return Pattern.matches(option + len, s);
     }

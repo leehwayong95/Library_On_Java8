@@ -100,7 +100,7 @@ public class View{
 	public String signupPW()//회원가입 PW 입력
 	{
 		String inputPW;
-		inputPW = this.inputKeyboard("희망 PW : ");
+		inputPW = this.inputKeyboard("희망 PW (2글자 이상): ");
 		String confirmPW = this.inputKeyboard("PW 재확인 : ");
 		if(inputPW.equals(confirmPW))
 		{
@@ -111,6 +111,11 @@ public class View{
 			this.consolePrint(1, "비밀번호가 틀립니다. 다시 입력 해주세요.");
 			return this.signupPW();
 		}
+	}
+	public String signupPW(int md)//회원가입 PW 입력
+	{
+		this.consolePrint(1, "잘못 입력 하셨습니다. 다시 입력해주세요.");
+		return signupPW();
 	}
 	
 	public String signupName()//회원가입 이름 입력
